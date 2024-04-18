@@ -11,7 +11,6 @@
 
     <groupId>alexander.sergeev</groupId>
     <artifactId>main-service</artifactId>
-
     <name>main-service</name>
 
     <properties>

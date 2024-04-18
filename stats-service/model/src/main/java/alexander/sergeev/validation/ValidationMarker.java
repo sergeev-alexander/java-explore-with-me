@@ -2,8 +2,10 @@ package alexander.sergeev.validation;
 
 public interface ValidationMarker {
 
-    interface OnCreate {}
+    interface OnCreate {
+    }
 
-    interface OnUpdate {}
+    interface OnUpdate {
+    }
 
 }

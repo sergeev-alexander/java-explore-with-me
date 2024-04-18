@@ -45,4 +45,5 @@ public class HitService {
                     : hitRepository.getStatsByUris(start, end, uris);
         }
     }
+
 }

@@ -10,7 +10,6 @@
     </parent>
 
     <artifactId>client</artifactId>
-
     <name>client</name>
 
     <properties>
