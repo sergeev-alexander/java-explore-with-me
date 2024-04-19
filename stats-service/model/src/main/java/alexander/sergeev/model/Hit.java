@@ -20,14 +20,14 @@ public class Hit {
     @Column(name = "id")
     private Long id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "app_id", nullable = false)
     private App app;
 
-    @Column(name = "uri", nullable = false, length = 128)
+    @Column(name = "uri", nullable = false, length = 32)
     private String uri;
 
-    @Column(name = "ip", nullable = false, length = 32)
+    @Column(name = "ip", nullable = false, length = 15)
     private String ip;
 
     @Column(name = "time_stamp")
