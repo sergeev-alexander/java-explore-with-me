@@ -17,20 +17,20 @@ public class HitDto {
 
     @NotBlank(groups = ValidationMarker.OnCreate.class,
             message = "Incoming hit app field is blank!")
-    @Size(groups = ValidationMarker.OnCreate.class, max = 128,
-            message = "Incoming hit app field is bigger than 128 characters!")
+    @Size(groups = ValidationMarker.OnCreate.class, max = 32,
+            message = "Incoming hit app field is bigger than 32 characters!")
     private String app;
 
     @NotBlank(groups = ValidationMarker.OnCreate.class,
             message = "Incoming hit uri field is blank!")
-    @Size(groups = ValidationMarker.OnCreate.class, max = 128,
-            message = "Incoming hit uri field is bigger than 128 characters!")
+    @Size(groups = ValidationMarker.OnCreate.class, max = 32,
+            message = "Incoming hit uri field is bigger than 32 characters!")
     private String uri;
 
     @NotBlank(groups = ValidationMarker.OnCreate.class,
             message = "Incoming hit ip field is blank!")
-    @Size(groups = ValidationMarker.OnCreate.class, max = 32,
-            message = "Incoming hit ip field is bigger than 32 characters!")
+    @Size(groups = ValidationMarker.OnCreate.class, max = 15,
+            message = "Incoming hit ip field is bigger than 15 characters!")
     private String ip;
 
     @NotNull(groups = ValidationMarker.OnCreate.class,
