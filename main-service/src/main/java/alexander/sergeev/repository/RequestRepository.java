@@ -31,6 +31,8 @@ public interface RequestRepository extends JpaRepository<Request, Long> {
 
     Boolean existsByEventIdAndRequesterId(Long eventId, Long requesterId);
 
+    Boolean existsByIdInAndStatus(Set<Long> ids, RequestStatus requestStatus);
+
     default Request getRequestById(Long id) {
         return findById(id).orElseThrow(() -> new NotFoundException("There's no request with id " + id));
     }

@@ -46,11 +46,11 @@ public class AdminUserController {
         return userService.postUser(newUserDto);
     }
 
-    @DeleteMapping
+    @DeleteMapping("/{id}")
     @ResponseStatus(code = HttpStatus.NO_CONTENT)
     public void deleteUserById(
             HttpServletRequest request,
-            @RequestParam(name = "id") @Positive Long userId) {
+            @PathVariable(name = "id") @Positive Long userId) {
         log.info("{} {}", request.getMethod(), request.getRequestURI());
         userService.deleteUserById(userId);
     }

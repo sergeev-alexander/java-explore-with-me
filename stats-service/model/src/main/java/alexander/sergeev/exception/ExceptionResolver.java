@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import javax.validation.ConstraintViolationException;
+import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
@@ -36,7 +37,8 @@ public class ExceptionResolver {
     }
 
     @ExceptionHandler({ConflictException.class,
-            ConstraintViolationException.class})
+            ConstraintViolationException.class,
+            SQLException.class})
     public ResponseEntity<ApiError> conflictExceptionHandle(Exception e) {
         HttpStatus httpStatus = HttpStatus.CONFLICT;
         log.error("{} : {}", e.getClass().getSimpleName(), e.getMessage());
@@ -73,8 +75,7 @@ public class ExceptionResolver {
     }
 
     @ExceptionHandler({MissingServletRequestParameterException.class,
-            BadRequestException.class,
-            /* SQLException.class */})
+            BadRequestException.class})
     public ResponseEntity<ApiError> badRequestExceptionHandle(Exception e) {
         HttpStatus httpStatus = HttpStatus.BAD_REQUEST;
         log.error("{} : {}", e.getClass().getSimpleName(), e.getMessage());

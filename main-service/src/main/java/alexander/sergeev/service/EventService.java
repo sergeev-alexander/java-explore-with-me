@@ -22,19 +22,14 @@ import alexander.sergeev.repository.RequestRepository;
 import alexander.sergeev.repository.UserRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -78,22 +73,6 @@ public class EventService {
                                                Pageable pageable) {
         if (start != null && end != null && !start.isBefore(end))
             throw new BadRequestException("Start is after end!");
-
-//        Page<Event> events = eventRepository.findAll(((root, query, criteriaBuilder) -> {
-//            List<Predicate> predicates = new ArrayList<>();
-//            if (users != null && !users.isEmpty())
-//                predicates.add(root.get("initiator").in(users));
-//            if (states != null && !states.isEmpty())
-//                predicates.add(root.get("state").in(states));
-//            if (categories != null && !categories.isEmpty())
-//                predicates.add(root.get("category").in(categories));
-//            if (start != null)
-//                predicates.add(criteriaBuilder.greaterThanOrEqualTo(root.get("eventDate"), start));
-//            if (end != null)
-//                predicates.add(criteriaBuilder.lessThanOrEqualTo(root.get("eventDate"), end));
-//            return query.where(predicates.toArray(new Predicate[predicates.size()])).getRestriction();
-//        }), pageable);
-
         Specification<Event> specification = Specification.where(null);
         if (users != null && !users.isEmpty())
             specification = specification.and((root, query, criteriaBuilder) ->
@@ -129,8 +108,9 @@ public class EventService {
                                                  Integer size) {
         if (start != null && end != null && !start.isBefore(end))
             throw new BadRequestException("Start is after end!");
-        Specification<Event> specification = Specification.where((root, query, criteriaBuilder) ->
-                criteriaBuilder.equal(root.get("state"), EventState.PUBLISHED));
+        Specification<Event> specification = Specification.where(null);
+        specification = specification.and((root, query, criteriaBuilder) ->
+        criteriaBuilder.equal(root.get("state"), EventState.PUBLISHED));
         if (text != null && !text.isBlank()) {
             specification = specification.and((root, query, criteriaBuilder) ->
                     criteriaBuilder.or(
@@ -156,16 +136,33 @@ public class EventService {
         if (onlyAvailable)
             specification = specification.and(((root, query, criteriaBuilder) ->
                     criteriaBuilder.lessThan(root.get("participantLimit"), root.get("confirmedRequests"))));
-        Sort sorting = Sort.by(Sort.Direction.ASC, "id");
-        if (sort != null) {
-            if (sort.equals(EventSort.EVENT_DATE.toString()))
-                sorting = Sort.by(Sort.Direction.ASC, "event_date");
-            if (sort.equals(EventSort.VIEWS.toString()))
-                sorting = Sort.by(Sort.Direction.ASC, "views");
-        }
-        Pageable pageable = PageRequest.of(firstElement / size, size, sorting);
+//        Sort sorting = Sort.by(Sort.Direction.ASC, "id");
+//        if (sort != null) {
+//            if (sort.equals(EventSort.EVENT_DATE.toString()))
+//                sorting = Sort.by(Sort.Direction.ASC, "event_date");
+//            if (sort.equals(EventSort.VIEWS.toString()))
+//                sorting = Sort.by(Sort.Direction.ASC, "views");
+//        }
+//        Pageable pageable = PageRequest.of(firstElement / size, size, sorting);
+
+
+
         sendHitDtoToStatsServer(httpServletRequest);
-        return eventRepository.findAll(specification, pageable)
+
+        Comparator<Event> eventComparator = Comparator.comparing(Event::getId);
+
+        if (sort != null) {
+            eventComparator = sort.equals(EventSort.EVENT_DATE.toString())
+                    ? Comparator.comparing(Event::getEventDate)
+                    : Comparator.comparing(Event::getViews);
+        }
+
+        List<Event> eventList = eventRepository.findAll(specification)
+                .stream()
+                .sorted(eventComparator)
+                .collect(Collectors.toList());
+
+        return setViewsToEventList(eventList)
                 .stream()
                 .map(EventMapper::mapEventToShortDto)
                 .collect(Collectors.toList());
@@ -190,7 +187,7 @@ public class EventService {
     public EventFullDto patchInitiatorEventById(Long userId, Long eventId, UpdateEventDto updateEventDto) {
         Event event = getUserEventById(userId, eventId);
         if (!(event.getState() == EventState.PENDING || event.getState() == EventState.REJECTED))
-            throw new ConflictException("Updating event status must be PENDING or REJECTED!");
+            throw new ConflictException("Updating event state must be PENDING or REJECTED!");
         if (updateEventDto.getStateAction() != null) {
             if (updateEventDto.getStateAction().equals(EventUserStateAction.SEND_TO_REVIEW.toString()))
                 event.setState(EventState.PENDING);
@@ -226,6 +223,8 @@ public class EventService {
 
     public EventFullDto patchEventByIdByAdmin(Long eventId, UpdateEventDto updateEventDto) {
         Event event = eventRepository.getEventById(eventId);
+        if (event.getState() == EventState.CANCELED)
+            throw new ConflictException("Not allowed to update a canceled event!");
         if (updateEventDto.getStateAction() != null && event.getState() != EventState.PENDING)
             throw new ConflictException("Not allowed to publish or reject not pending event!");
 //        if (updateEventDto.getAnnotation() != null)
@@ -270,12 +269,14 @@ public class EventService {
                                                           RequestUpdateDto requestUpdateDto) {
         Event event = getUserEventById(userId, eventId);
         long participantLimit = event.getParticipantLimit();
-        if (participantLimit == 0 || !event.getRequestModeration())
+        if (participantLimit == 0L || !event.getRequestModeration())
             throw new ConflictException("Event " + eventId + " doesn't need request moderation!");
-        if (requestUpdateDto.getStatus().equals(RequestUpdateStatus.REJECTED.toString()))
+        if (requestUpdateDto.getStatus().equals(RequestUpdateStatus.REJECTED.toString())) {
+            if (requestRepository.existsByIdInAndStatus(requestUpdateDto.getRequestIds(), RequestStatus.CONFIRMED))
+                throw new ConflictException("Not allowed to reject confirmed requests!");
             requestRepository.setRequestStatusByIds(requestUpdateDto.getRequestIds(),
                     RequestStatus.REJECTED);
-        else {
+        } else {
             Set<Request> requestSet = requestRepository.findByIdIn(requestUpdateDto.getRequestIds());
             if (!requestSet
                     .stream()

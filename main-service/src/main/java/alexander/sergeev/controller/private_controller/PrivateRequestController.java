@@ -38,7 +38,7 @@ public class PrivateRequestController {
         return requestService.postRequest(userId, eventId);
     }
 
-    @PatchMapping("/{requestId}")
+    @PatchMapping("/{requestId}/cancel")
     @ResponseStatus(code = HttpStatus.OK)
     public RequestDto patchRequestById(
             HttpServletRequest request,

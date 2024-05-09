@@ -48,6 +48,7 @@ CREATE TABLE IF NOT EXISTS events
 
     CHECK (state IN ('PENDING',
                      'PUBLISHED',
+                     'REJECTED',
                      'CANCELED'))
 );
 
