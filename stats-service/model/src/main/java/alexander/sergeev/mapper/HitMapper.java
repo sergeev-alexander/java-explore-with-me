@@ -4,13 +4,8 @@ import alexander.sergeev.dto.HitDto;
 import alexander.sergeev.model.Hit;
 import lombok.experimental.UtilityClass;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-
 @UtilityClass
 public class HitMapper {
-
-    private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
     public Hit mapIncomingDtoToHit(HitDto hitDto) {
         return new Hit(
@@ -18,7 +13,7 @@ public class HitMapper {
                 null,
                 hitDto.getUri(),
                 hitDto.getIp(),
-                LocalDateTime.parse(hitDto.getTimestamp(), formatter));
+                hitDto.getTimestamp());
     }
 
     public HitDto mapHitToDto(Hit hit) {
@@ -27,7 +22,7 @@ public class HitMapper {
                 hit.getApp().getName(),
                 hit.getUri(),
                 hit.getIp(),
-                hit.getTimestamp().format(formatter));
+                hit.getTimestamp());
     }
 
 }
