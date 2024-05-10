@@ -22,6 +22,7 @@ import alexander.sergeev.repository.RequestRepository;
 import alexander.sergeev.repository.UserRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
@@ -110,7 +111,7 @@ public class EventService {
             throw new BadRequestException("Start is after end!");
         Specification<Event> specification = Specification.where(null);
         specification = specification.and((root, query, criteriaBuilder) ->
-        criteriaBuilder.equal(root.get("state"), EventState.PUBLISHED));
+                criteriaBuilder.equal(root.get("state"), EventState.PUBLISHED));
         if (text != null && !text.isBlank()) {
             specification = specification.and((root, query, criteriaBuilder) ->
                     criteriaBuilder.or(
@@ -136,32 +137,17 @@ public class EventService {
         if (onlyAvailable)
             specification = specification.and(((root, query, criteriaBuilder) ->
                     criteriaBuilder.lessThan(root.get("participantLimit"), root.get("confirmedRequests"))));
-//        Sort sorting = Sort.by(Sort.Direction.ASC, "id");
-//        if (sort != null) {
-//            if (sort.equals(EventSort.EVENT_DATE.toString()))
-//                sorting = Sort.by(Sort.Direction.ASC, "event_date");
-//            if (sort.equals(EventSort.VIEWS.toString()))
-//                sorting = Sort.by(Sort.Direction.ASC, "views");
-//        }
-//        Pageable pageable = PageRequest.of(firstElement / size, size, sorting);
-
-
-
         sendHitDtoToStatsServer(httpServletRequest);
-
-        Comparator<Event> eventComparator = Comparator.comparing(Event::getId);
-
+        Comparator<Event> eventSortComparator = Comparator.comparing(Event::getId);
         if (sort != null) {
-            eventComparator = sort.equals(EventSort.EVENT_DATE.toString())
+            eventSortComparator = sort.equals(EventSort.EVENT_DATE.toString())
                     ? Comparator.comparing(Event::getEventDate)
                     : Comparator.comparing(Event::getViews);
         }
-
-        List<Event> eventList = eventRepository.findAll(specification)
+        List<Event> eventList = eventRepository.findAll(specification, PageRequest.of(firstElement / size, size))
                 .stream()
-                .sorted(eventComparator)
+                .sorted(eventSortComparator)
                 .collect(Collectors.toList());
-
         return setViewsToEventList(eventList)
                 .stream()
                 .map(EventMapper::mapEventToShortDto)
@@ -193,31 +179,7 @@ public class EventService {
                 event.setState(EventState.PENDING);
             else event.setState(EventState.CANCELED);
         }
-//        if (updateEventDto.getAnnotation() != null)
-//            event.setAnnotation(updateEventDto.getAnnotation());
-//        if (updateEventDto.getCategory() != null)
-//            event.setCategory(categoryRepository.getCategoryById(updateEventDto.getCategory()));
-//        if (updateEventDto.getDescription() != null)
-//            event.setDescription(updateEventDto.getDescription());
-//        if (updateEventDto.getEventDate() != null)
-//            event.setEventDate(updateEventDto.getEventDate());
-//        if (updateEventDto.getLocation() != null)
-//            event.setLocation(updateEventDto.getLocation());
-//        if (updateEventDto.getPaid() != null)
-//            event.setPaid(updateEventDto.getPaid());
-//        if (updateEventDto.getParticipantLimit() != null) {
-//            if (event.getConfirmedRequests() > updateEventDto.getParticipantLimit())
-//                throw new ConflictException("Updating event participation limit " +
-//                        "is less than confirmed request quantity!");
-//            event.setParticipantLimit(updateEventDto.getParticipantLimit());
-//        }
-//        if (updateEventDto.getRequestModeration() != null)
-//            event.setRequestModeration(updateEventDto.getRequestModeration());
-//        if (updateEventDto.getTitle() != null)
-//            event.setTitle(updateEventDto.getTitle());
-
         updateEventFields(event, updateEventDto);
-
         return EventMapper.mapEventToFullDto(setViewsToEvent(eventRepository.save(event)));
     }
 
@@ -227,31 +189,7 @@ public class EventService {
             throw new ConflictException("Not allowed to update a canceled event!");
         if (updateEventDto.getStateAction() != null && event.getState() != EventState.PENDING)
             throw new ConflictException("Not allowed to publish or reject not pending event!");
-//        if (updateEventDto.getAnnotation() != null)
-//            event.setAnnotation(updateEventDto.getAnnotation());
-//        if (updateEventDto.getCategory() != null)
-//            event.setCategory(categoryRepository.getCategoryById(updateEventDto.getCategory()));
-//        if (updateEventDto.getDescription() != null)
-//            event.setDescription(updateEventDto.getDescription());
-//        if (updateEventDto.getEventDate() != null)
-//            event.setEventDate(updateEventDto.getEventDate());
-//        if (updateEventDto.getLocation() != null)
-//            event.setLocation(updateEventDto.getLocation());
-//        if (updateEventDto.getPaid() != null)
-//            event.setPaid(updateEventDto.getPaid());
-//        if (updateEventDto.getParticipantLimit() != null) {
-//            if (event.getConfirmedRequests() > updateEventDto.getParticipantLimit())
-//                throw new ConflictException("Updating event participation limit " +
-//                        "is less than confirmed request quantity!");
-//            event.setParticipantLimit(updateEventDto.getParticipantLimit());
-//        }
-//        if (updateEventDto.getRequestModeration() != null)
-//            event.setRequestModeration(updateEventDto.getRequestModeration());
-//        if (updateEventDto.getTitle() != null)
-//            event.setTitle(updateEventDto.getTitle());
-
         updateEventFields(event, updateEventDto);
-
         if (updateEventDto.getStateAction() != null
                 && updateEventDto.getStateAction().equals(EventAdminStateAction.REJECT_EVENT.toString())) {
             event.setState(EventState.REJECTED);
@@ -268,36 +206,41 @@ public class EventService {
                                                           Long eventId,
                                                           RequestUpdateDto requestUpdateDto) {
         Event event = getUserEventById(userId, eventId);
-        long participantLimit = event.getParticipantLimit();
-        if (participantLimit == 0L || !event.getRequestModeration())
+        if (event.getParticipantLimit() == 0L || !event.getRequestModeration())
             throw new ConflictException("Event " + eventId + " doesn't need request moderation!");
-        if (requestUpdateDto.getStatus().equals(RequestUpdateStatus.REJECTED.toString())) {
-            if (requestRepository.existsByIdInAndStatus(requestUpdateDto.getRequestIds(), RequestStatus.CONFIRMED))
-                throw new ConflictException("Not allowed to reject confirmed requests!");
-            requestRepository.setRequestStatusByIds(requestUpdateDto.getRequestIds(),
-                    RequestStatus.REJECTED);
-        } else {
-            Set<Request> requestSet = requestRepository.findByIdIn(requestUpdateDto.getRequestIds());
-            if (!requestSet
+        Set<Request> updatingRequests = requestRepository.findByIdIn(requestUpdateDto.getRequestIds());
+        if (!updatingRequests
+                .stream()
+                .allMatch(request -> request.getStatus() == RequestStatus.PENDING))
+            throw new ConflictException("Allowed to change requests only in pending status!");
+        if (requestUpdateDto.getStatus().equals(RequestUpdateStatus.REJECTED.toString()))
+            requestRepository.saveAll(updatingRequests
                     .stream()
-                    .allMatch(request -> requestUpdateDto.getRequestIds().contains(request.getId())))
-                throw new ConflictException("All confirming requests must have pending request status!");
-            if (event.getConfirmedRequests() >= participantLimit)
+                    .peek(request -> request.setStatus(RequestStatus.REJECTED))
+                    .collect(Collectors.toSet()));
+        else {
+            if (event.getConfirmedRequests() >= event.getParticipantLimit())
                 throw new ConflictException("Event already reached participation limit!");
-            requestRepository.setRequestStatusByIds(requestUpdateDto.getRequestIds(),
-                    RequestStatus.CONFIRMED);
-            eventRepository.incrementEventConfirmedRequestsById(event.getId(), (long) requestSet.size());
-            if (participantLimit - event.getConfirmedRequests() - requestUpdateDto.getRequestIds().size() <= 0)
-                requestRepository.rejectAllPendingRequests();
+            event.setConfirmedRequests(event.getConfirmedRequests() + updatingRequests.size());
+            event = eventRepository.save(event);
+            requestRepository.saveAll(updatingRequests
+                    .stream()
+                    .peek(request -> request.setStatus(RequestStatus.CONFIRMED))
+                    .collect(Collectors.toSet()));
+            if (event.getParticipantLimit() - event.getConfirmedRequests() - requestUpdateDto.getRequestIds().size() <= 0)
+                requestRepository.saveAll(requestRepository.findByEventIdAndStatus(eventId, RequestStatus.PENDING)
+                        .stream()
+                        .peek(request -> request.setStatus(RequestStatus.REJECTED))
+                        .collect(Collectors.toSet()));
         }
-        Set<Request> requestSet = requestRepository.findByEventId(eventId);
+        Set<Request> allEventRequests = requestRepository.findByEventId(eventId);
         return new RequestResponseDto(
-                requestSet
+                allEventRequests
                         .stream()
                         .filter(request -> request.getStatus().equals(RequestStatus.CONFIRMED))
                         .map(RequestMapper::mapRequestToDto)
                         .collect(Collectors.toSet()),
-                requestSet
+                allEventRequests
                         .stream()
                         .filter(request -> request.getStatus().equals(RequestStatus.REJECTED))
                         .map(RequestMapper::mapRequestToDto)
