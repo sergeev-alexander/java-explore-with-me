@@ -20,7 +20,6 @@ import alexander.sergeev.repository.CategoryRepository;
 import alexander.sergeev.repository.EventRepository;
 import alexander.sergeev.repository.RequestRepository;
 import alexander.sergeev.repository.UserRepository;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -43,7 +42,6 @@ public class EventService {
     private final CategoryRepository categoryRepository;
     private final RequestRepository requestRepository;
     private final StatsClient statsClient;
-    private final ObjectMapper objectmapper;
 
     public static final String APP_NAME = "ewm-main-service";
 
