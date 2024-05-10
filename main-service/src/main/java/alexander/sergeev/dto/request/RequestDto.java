@@ -13,8 +13,8 @@ import java.time.LocalDateTime;
 import static alexander.sergeev.formatter.FormatterDateTime.DATE_TIME_PATTERN;
 
 @Data
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class RequestDto {
 

@@ -2,6 +2,7 @@ package alexander.sergeev.exception;
 
 import alexander.sergeev.model.ApiError;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
@@ -38,7 +39,8 @@ public class ExceptionResolver {
 
     @ExceptionHandler({ConflictException.class,
             ConstraintViolationException.class,
-            SQLException.class})
+            SQLException.class,
+            DataIntegrityViolationException.class})
     public ResponseEntity<ApiError> conflictExceptionHandle(Exception e) {
         HttpStatus httpStatus = HttpStatus.CONFLICT;
         log.error("{} : {}", e.getClass().getSimpleName(), e.getMessage());
@@ -89,18 +91,18 @@ public class ExceptionResolver {
                 httpStatus);
     }
 
-//    @ExceptionHandler(Throwable.class)
-//    public ResponseEntity<ApiError> throwableHandle(Exception e) {
-//        HttpStatus httpStatus = HttpStatus.INTERNAL_SERVER_ERROR;
-//        log.error("{} : {}", e.getClass().getSimpleName(), e.getMessage());
-//        return new ResponseEntity<>(
-//                new ApiError(
-//                        e.getMessage(),
-//                        e.getCause() != null ? e.getCause().toString() : "Cause is nonexistent or unknown!",
-//                        httpStatus.toString(),
-//                        LocalDateTime.now().format(DATE_TIME_FORMATTER),
-//                        e.getStackTrace()),
-//                httpStatus);
-//    }
+    @ExceptionHandler(Throwable.class)
+    public ResponseEntity<ApiError> throwableHandle(Exception e) {
+        HttpStatus httpStatus = HttpStatus.INTERNAL_SERVER_ERROR;
+        log.error("{} : {}", e.getClass().getSimpleName(), e.getMessage());
+        return new ResponseEntity<>(
+                new ApiError(
+                        e.getMessage(),
+                        e.getCause() != null ? e.getCause().toString() : "Cause is nonexistent or unknown!",
+                        httpStatus.toString(),
+                        LocalDateTime.now().format(DATE_TIME_FORMATTER),
+                        e.getStackTrace()),
+                httpStatus);
+    }
 
 }

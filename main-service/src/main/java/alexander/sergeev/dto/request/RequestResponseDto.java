@@ -9,8 +9,8 @@ import lombok.experimental.FieldDefaults;
 import java.util.Set;
 
 @Data
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class RequestResponseDto {
 

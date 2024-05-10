@@ -25,6 +25,7 @@ public class HitsController {
     private final HitService hitService;
 
     @GetMapping("/stats")
+    @ResponseStatus(HttpStatus.OK)
     public List<StatsDto> getStats(
             HttpServletRequest request,
             @RequestParam(name = "start") @DateTimeFormat(pattern = DATE_TIME_PATTERN) LocalDateTime start,
