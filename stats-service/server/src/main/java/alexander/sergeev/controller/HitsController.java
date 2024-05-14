@@ -15,6 +15,8 @@ import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import static alexander.sergeev.formatter.FormatterDateTime.DATE_TIME_PATTERN;
+
 @Slf4j
 @RestController
 @RequiredArgsConstructor
@@ -23,12 +25,13 @@ public class HitsController {
     private final HitService hitService;
 
     @GetMapping("/stats")
+    @ResponseStatus(HttpStatus.OK)
     public List<StatsDto> getStats(
             HttpServletRequest request,
-            @RequestParam(value = "start") @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime start,
-            @RequestParam(value = "end") @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime end,
-            @RequestParam(value = "uris", defaultValue = "") List<String> uris,
-            @RequestParam(value = "unique", defaultValue = "false") Boolean unique) {
+            @RequestParam(name = "start") @DateTimeFormat(pattern = DATE_TIME_PATTERN) LocalDateTime start,
+            @RequestParam(name = "end") @DateTimeFormat(pattern = DATE_TIME_PATTERN) LocalDateTime end,
+            @RequestParam(name = "uris", defaultValue = "") List<String> uris,
+            @RequestParam(name = "unique", defaultValue = "false") Boolean unique) {
         log.info("{} {}?{}", request.getMethod(), request.getRequestURI(), request.getQueryString());
         return hitService.getStats(start, end, uris, unique);
     }

@@ -2,6 +2,7 @@ package alexander.sergeev.service;
 
 import alexander.sergeev.dto.HitDto;
 import alexander.sergeev.dto.StatsDto;
+import alexander.sergeev.exception.BadRequestException;
 import alexander.sergeev.mapper.HitMapper;
 import alexander.sergeev.model.App;
 import alexander.sergeev.model.Hit;
@@ -35,6 +36,8 @@ public class HitService {
                                    LocalDateTime end,
                                    List<String> uris,
                                    Boolean unique) {
+        if (start.isAfter(end))
+            throw new BadRequestException("Start is after end!");
         if (unique) {
             return uris == null || uris.isEmpty()
                     ? hitRepository.getUniqueStats(start, end)

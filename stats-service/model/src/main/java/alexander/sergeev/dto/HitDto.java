@@ -3,14 +3,21 @@ package alexander.sergeev.dto;
 import alexander.sergeev.validation.ValidationMarker;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.time.LocalDateTime;
+
+import static alexander.sergeev.formatter.FormatterDateTime.DATE_TIME_PATTERN;
 
 @Data
 @AllArgsConstructor
+@NoArgsConstructor
+@Builder
 public class HitDto {
 
     private Long id;
@@ -35,7 +42,7 @@ public class HitDto {
 
     @NotNull(groups = ValidationMarker.OnCreate.class,
             message = "Incoming hit timestamp field is null!")
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private String timestamp;
+    @JsonFormat(pattern = DATE_TIME_PATTERN)
+    private LocalDateTime timestamp;
 
 }

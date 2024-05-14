@@ -1,9 +1,12 @@
 package alexander.sergeev.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+
+import static alexander.sergeev.formatter.FormatterDateTime.DATE_TIME_PATTERN;
 
 @Entity
 @Table(name = "hits")
@@ -31,6 +34,7 @@ public class Hit {
     private String ip;
 
     @Column(name = "time_stamp")
+    @JsonFormat(pattern = DATE_TIME_PATTERN)
     private LocalDateTime timestamp;
 
 }
