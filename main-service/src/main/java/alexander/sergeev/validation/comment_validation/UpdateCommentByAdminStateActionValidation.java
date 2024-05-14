@@ -1,4 +1,4 @@
-package alexander.sergeev.validation.event_validation;
+package alexander.sergeev.validation.comment_validation;
 
 import javax.validation.Constraint;
 import javax.validation.Payload;
@@ -11,9 +11,9 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 @Target(ElementType.FIELD)
 @Retention(RUNTIME)
-@Constraint(validatedBy = UpdateEventByAdminStateActionValidator.class)
+@Constraint(validatedBy = UpdateCommentByAdminStateActionValidator.class)
 @Documented
-public @interface UpdateEventByAdminStateActionValidation {
+public @interface UpdateCommentByAdminStateActionValidation {
 
     String message() default "Updating admin state action validation failed!";
 
@@ -22,4 +22,3 @@ public @interface UpdateEventByAdminStateActionValidation {
     Class<? extends Payload>[] payload() default {};
 
 }
-

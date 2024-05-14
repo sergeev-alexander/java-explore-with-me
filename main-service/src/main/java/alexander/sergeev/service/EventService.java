@@ -173,7 +173,7 @@ public class EventService {
         if (!(event.getState() == EventState.PENDING || event.getState() == EventState.REJECTED))
             throw new ConflictException("Updating event state must be PENDING or REJECTED!");
         if (updateEventDto.getStateAction() != null) {
-            if (updateEventDto.getStateAction().equals(EventUserStateAction.SEND_TO_REVIEW.toString()))
+            if (updateEventDto.getStateAction().equals(UserStateAction.SEND_TO_REVIEW.toString()))
                 event.setState(EventState.PENDING);
             else event.setState(EventState.CANCELED);
         }

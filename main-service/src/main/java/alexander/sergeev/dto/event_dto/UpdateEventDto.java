@@ -3,6 +3,8 @@ package alexander.sergeev.dto.event_dto;
 import alexander.sergeev.model.Location;
 import alexander.sergeev.validation.ValidationMarker;
 import alexander.sergeev.validation.event_validation.*;
+import alexander.sergeev.validation.event_validation.UpdateEventByAdminStateActionValidation;
+import alexander.sergeev.validation.state_action_validation.UpdateByUserStateActionValidation;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -46,7 +48,7 @@ public class UpdateEventDto {
 
     Boolean requestModeration;
 
-    @UpdateEventStateActionValidation(groups = ValidationMarker.OnUpdate.class)
+    @UpdateByUserStateActionValidation(groups = ValidationMarker.OnUpdate.class)
     @UpdateEventByAdminStateActionValidation(groups = ValidationMarker.OnAdminUpdate.class)
     String stateAction;
 

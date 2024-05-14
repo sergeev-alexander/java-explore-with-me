@@ -4,12 +4,11 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>ru.practicum</groupId>
+        <groupId>alexander.sergeev</groupId>
         <artifactId>explore-with-me</artifactId>
         <version>0.0.1-SNAPSHOT</version>
     </parent>
 
-    <groupId>alexander.sergeev</groupId>
     <artifactId>main-service</artifactId>
     <name>main-service</name>
 
