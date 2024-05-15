@@ -1,7 +1,5 @@
 package alexander.sergeev.validation.comment_validation;
 
-import alexander.sergeev.validation.event_validation.UpdateEventTitleValidator;
-
 import javax.validation.Constraint;
 import javax.validation.Payload;
 import java.lang.annotation.Documented;
