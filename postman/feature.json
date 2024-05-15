@@ -1,0 +1,1523 @@
+{
+	"info": {
+		"_postman_id": "28f44c33-7ef6-425c-a9e7-22c9cd99cfea",
+		"name": "Comments",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "30837175"
+	},
+	"item": [
+		{
+			"name": "Post user_1 by admin",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 201\", function () {",
+							"    pm.response.to.have.status(201);",
+							"});",
+							"pm.test(\"Response have body\", function () {",
+							"    pm.response.to.be.withBody;",
+							"});",
+							"pm.test(\"Response is json\", function() {",
+							"    pm.response.to.be.json;",
+							"});",
+							"",
+							"const source = JSON.parse(pm.request.body.raw);",
+							"const target = pm.response.json();",
+							"",
+							"pm.test(\"Response must contain: id, name, email\", function () {",
+							"    pm.expect(target).to.have.property('id');",
+							"    pm.expect(target).to.have.property('name');",
+							"    pm.expect(target).to.have.property('email');",
+							"});",
+							"",
+							"pm.test(\"Id must be not null\", function () {",
+							"    pm.expect(target.id).to.not.be.null;",
+							"});",
+							"",
+							"pm.test(\"Name and email must be equal to request\", function() {",
+							"    pm.expect(source.name).equal(target.name, 'Wrong name');",
+							"    pm.expect(source.email).equal(target.email, 'Wrong email');",
+							"});",
+							"",
+							"pm.environment.set(\"user_1_id\", target.id);"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"User One Name\",\r\n    \"email\": \"user{{$randomInt}}@email.com\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{main-service-url}}/admin/users",
+					"host": [
+						"{{main-service-url}}"
+					],
+					"path": [
+						"admin",
+						"users"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Post category by admin",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 201\", function () {",
+							"    pm.response.to.have.status(201);",
+							"});",
+							"pm.test(\"Response have body\", function () {",
+							"    pm.response.to.be.withBody;",
+							"});",
+							"pm.test(\"Response is json\", function() {",
+							"    pm.response.to.be.json;",
+							"});",
+							"",
+							"const target = pm.response.json();",
+							"const source = JSON.parse(pm.request.body.raw);",
+							"",
+							"pm.test(\"Response must contain: id, name\", function () {",
+							"    pm.expect(target).to.have.property('id');",
+							"    pm.expect(target).to.have.property('name');",
+							"});",
+							"",
+							"pm.test(\"Id must be not null\", function () {",
+							"    pm.expect(target.id).to.not.be.null;",
+							"});",
+							"",
+							"pm.test(\"Name must be equal to request\", function() {",
+							"    pm.expect(source.name).equal(target.name, 'Wrong name');",
+							"});",
+							"",
+							"pm.environment.set(\"category_id\", target.id);"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"Category name {{$randomInt}}\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{main-service-url}}/admin/categories",
+					"host": [
+						"{{main-service-url}}"
+					],
+					"path": [
+						"admin",
+						"categories"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Post event by user_1",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 201\", function () {",
+							"    pm.response.to.have.status(201);",
+							"});",
+							"pm.test(\"Response have body\", function () {",
+							"    pm.response.to.be.withBody;",
+							"});",
+							"pm.test(\"Response is json\", function() {",
+							"    pm.response.to.be.json;",
+							"});",
+							"",
+							"const target = pm.response.json();",
+							"const source = JSON.parse(pm.request.body.raw);",
+							"",
+							"pm.test(\"Response must contain all fields\", function () {",
+							"    pm.expect(target).to.have.property('id');",
+							"    pm.expect(target).to.have.property('annotation');",
+							"    pm.expect(target).to.have.property('category');",
+							"    pm.expect(target).to.have.property('confirmedRequests');",
+							"    pm.expect(target).to.have.property('createdOn');",
+							"    pm.expect(target).to.have.property('description');",
+							"    pm.expect(target).to.have.property('eventDate');",
+							"    pm.expect(target).to.have.property('initiator');",
+							"    pm.expect(target).to.have.property('location');",
+							"    pm.expect(target).to.have.property('paid');",
+							"    pm.expect(target).to.have.property('participantLimit');",
+							"    pm.expect(target).to.have.property('publishedOn');",
+							"    pm.expect(target).to.have.property('requestModeration');",
+							"    pm.expect(target).to.have.property('state');",
+							"    pm.expect(target).to.have.property('title');",
+							"    pm.expect(target).to.have.property('views');",
+							"});",
+							"",
+							"pm.test(\"Id must be not null\", function () {",
+							"    pm.expect(target.id).to.not.be.null;",
+							"});",
+							"",
+							"pm.test(\"Response fields must be equal to request\", function() {",
+							"    pm.expect(source.annotation).equal(target.annotation, 'Wrong annotation');",
+							"    pm.expect(0).equal(target.confirmedRequests, 'Wrong confirmedRequests');",
+							"    pm.expect(source.description).equal(target.description, 'Wrong description');",
+							"    pm.expect(source.eventDate).equal(target.eventDate, 'Wrong eventDate');",
+							"    pm.expect(source.paid).equal(target.paid, 'Wrong paid');",
+							"    pm.expect(source.participantLimit).equal(target.participantLimit, 'Wrong participantLimit');",
+							"    pm.expect(source.requestModeration).equal(target.requestModeration, 'Wrong requestModeration');",
+							"    pm.expect(source.title).equal(target.title, 'Wrong title');",
+							"});",
+							"",
+							"pm.environment.set(\"event_id\", target.id);"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"annotation\": \"Event annotation contains at least 20 characters\",\r\n    \"category\": {{category_id}},\r\n    \"description\": \"Event description contains at least 20 characters\",\r\n    \"eventDate\": \"2050-01-01 01:01:01\",\r\n    \"location\": {\r\n        \"lat\": -41.0873,\r\n        \"lon\": -102.4053\r\n    },\r\n    \"paid\": false,\r\n    \"participantLimit\": 0,\r\n    \"requestModeration\": false,\r\n    \"title\": \"Event title\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{main-service-url}}/users/{{user_1_id}}/events",
+					"host": [
+						"{{main-service-url}}"
+					],
+					"path": [
+						"users",
+						"{{user_1_id}}",
+						"events"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Post user_2 by admin",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 201\", function () {",
+							"    pm.response.to.have.status(201);",
+							"});",
+							"pm.test(\"Response have body\", function () {",
+							"    pm.response.to.be.withBody;",
+							"});",
+							"pm.test(\"Response is json\", function() {",
+							"    pm.response.to.be.json;",
+							"});",
+							"",
+							"const source = JSON.parse(pm.request.body.raw);",
+							"const target = pm.response.json();",
+							"",
+							"pm.test(\"Response must contain: id, name, email\", function () {",
+							"    pm.expect(target).to.have.property('id');",
+							"    pm.expect(target).to.have.property('name');",
+							"    pm.expect(target).to.have.property('email');",
+							"});",
+							"",
+							"pm.test(\"Id must be not null\", function () {",
+							"    pm.expect(target.id).to.not.be.null;",
+							"});",
+							"",
+							"pm.test(\"Name and email must be equal to request\", function() {",
+							"    pm.expect(source.name).equal(target.name, 'Wrong name');",
+							"    pm.expect(source.email).equal(target.email, 'Wrong email');",
+							"});",
+							"",
+							"pm.environment.set(\"user_2_id\", target.id);"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"User Two Name\",\r\n    \"email\": \"user{{$randomInt}}@email.com\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{main-service-url}}/admin/users",
+					"host": [
+						"{{main-service-url}}"
+					],
+					"path": [
+						"admin",
+						"users"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Post comment by user_2 (event not published) -> CONFLICT",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 409\", function () {",
+							"    pm.response.to.have.status(409);",
+							"});",
+							"pm.test(\"Response have body\", function () {",
+							"    pm.response.to.be.withBody;",
+							"});",
+							"pm.test(\"Response is json\", function() {",
+							"    pm.response.to.be.json;",
+							"});",
+							"",
+							"const target = pm.response.json();",
+							"",
+							"pm.test(\"Response must contain: message, reason, email\", function () {",
+							"    pm.expect(target).to.have.property('message');",
+							"    pm.expect(target).to.have.property('reason');",
+							"    pm.expect(target).to.have.property('status');",
+							"    pm.expect(target).to.have.property('timestamp');",
+							"    pm.expect(target).to.have.property('errors');",
+							"});",
+							"",
+							"pm.test(\"Status must be 409 CONFLICT\", function() {",
+							"    pm.expect(target.status).equal(\"409 CONFLICT\", 'Wrong status');",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"text\": \"Comment text\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{main-service-url}}/users/{{user_2_id}}/events/{{event_id}}/comments",
+					"host": [
+						"{{main-service-url}}"
+					],
+					"path": [
+						"users",
+						"{{user_2_id}}",
+						"events",
+						"{{event_id}}",
+						"comments"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Publish event by admin",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"pm.test(\"Response have body\", function () {",
+							"    pm.response.to.be.withBody;",
+							"});",
+							"pm.test(\"Response is json\", function() {",
+							"    pm.response.to.be.json;",
+							"});",
+							"",
+							"const target = pm.response.json();",
+							"",
+							"pm.test(\"Response must contain all fields\", function () {",
+							"    pm.expect(target).to.have.property('id');",
+							"    pm.expect(target).to.have.property('annotation');",
+							"    pm.expect(target).to.have.property('category');",
+							"    pm.expect(target).to.have.property('confirmedRequests');",
+							"    pm.expect(target).to.have.property('createdOn');",
+							"    pm.expect(target).to.have.property('description');",
+							"    pm.expect(target).to.have.property('eventDate');",
+							"    pm.expect(target).to.have.property('initiator');",
+							"    pm.expect(target).to.have.property('location');",
+							"    pm.expect(target).to.have.property('paid');",
+							"    pm.expect(target).to.have.property('participantLimit');",
+							"    pm.expect(target).to.have.property('publishedOn');",
+							"    pm.expect(target).to.have.property('requestModeration');",
+							"    pm.expect(target).to.have.property('state');",
+							"    pm.expect(target).to.have.property('title');",
+							"    pm.expect(target).to.have.property('views');",
+							"});",
+							"",
+							"pm.test(\"Id must be not null\", function () {",
+							"    pm.expect(target.id).to.not.be.null;",
+							"});",
+							"",
+							"pm.test(\"Response state field must be equal to PUBLISHED\", function() {",
+							"    pm.expect(target.state).equal(\"PUBLISHED\", 'Wrong state');",
+							"});",
+							"",
+							"pm.environment.set(\"event_id\", target.id);"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"stateAction\": \"PUBLISH_EVENT\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{main-service-url}}/admin/events/{{event_id}}",
+					"host": [
+						"{{main-service-url}}"
+					],
+					"path": [
+						"admin",
+						"events",
+						"{{event_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Post comment by user_1 (event initiator) -> CONFLICT",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 409\", function () {",
+							"    pm.response.to.have.status(409);",
+							"});",
+							"pm.test(\"Response have body\", function () {",
+							"    pm.response.to.be.withBody;",
+							"});",
+							"pm.test(\"Response is json\", function() {",
+							"    pm.response.to.be.json;",
+							"});",
+							"",
+							"const target = pm.response.json();",
+							"",
+							"pm.test(\"Response must contain: message, reason, email\", function () {",
+							"    pm.expect(target).to.have.property('message');",
+							"    pm.expect(target).to.have.property('reason');",
+							"    pm.expect(target).to.have.property('status');",
+							"    pm.expect(target).to.have.property('timestamp');",
+							"    pm.expect(target).to.have.property('errors');",
+							"});",
+							"",
+							"pm.test(\"Status must be 409 CONFLICT\", function() {",
+							"    pm.expect(target.status).equal(\"409 CONFLICT\", 'Wrong status');",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"text\": \"Comment text\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{main-service-url}}/users/{{user_1_id}}/events/{{event_id}}/comments",
+					"host": [
+						"{{main-service-url}}"
+					],
+					"path": [
+						"users",
+						"{{user_1_id}}",
+						"events",
+						"{{event_id}}",
+						"comments"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Post comment by user_2 (text.length < 2) -> BAD_REQUEST",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 400\", function () {",
+							"    pm.response.to.have.status(400);",
+							"});",
+							"pm.test(\"Response have body\", function () {",
+							"    pm.response.to.be.withBody;",
+							"});",
+							"pm.test(\"Response is json\", function() {",
+							"    pm.response.to.be.json;",
+							"});",
+							"",
+							"const target = pm.response.json();",
+							"",
+							"pm.test(\"Response must contain: message, reason, email\", function () {",
+							"    pm.expect(target).to.have.property('message');",
+							"    pm.expect(target).to.have.property('reason');",
+							"    pm.expect(target).to.have.property('status');",
+							"    pm.expect(target).to.have.property('timestamp');",
+							"    pm.expect(target).to.have.property('errors');",
+							"});",
+							"",
+							"pm.test(\"Status must be 400 BAD_REQUEST\", function() {",
+							"    pm.expect(target.status).equal(\"400 BAD_REQUEST\", 'Wrong status');",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"text\": \"x\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{main-service-url}}/users/{{user_2_id}}/events/{{event_id}}/comments",
+					"host": [
+						"{{main-service-url}}"
+					],
+					"path": [
+						"users",
+						"{{user_2_id}}",
+						"events",
+						"{{event_id}}",
+						"comments"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Post comment by user_2 (text.length > 2000) -> BAD_REQUEST",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 400\", function () {",
+							"    pm.response.to.have.status(400);",
+							"});",
+							"pm.test(\"Response have body\", function () {",
+							"    pm.response.to.be.withBody;",
+							"});",
+							"pm.test(\"Response is json\", function() {",
+							"    pm.response.to.be.json;",
+							"});",
+							"",
+							"const target = pm.response.json();",
+							"",
+							"pm.test(\"Response must contain: message, reason, email\", function () {",
+							"    pm.expect(target).to.have.property('message');",
+							"    pm.expect(target).to.have.property('reason');",
+							"    pm.expect(target).to.have.property('status');",
+							"    pm.expect(target).to.have.property('timestamp');",
+							"    pm.expect(target).to.have.property('errors');",
+							"});",
+							"",
+							"pm.test(\"Status must be 400 BAD_REQUEST\", function() {",
+							"    pm.expect(target.status).equal(\"400 BAD_REQUEST\", 'Wrong status');",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"text\": \"But I must explain to you how all this mistaken idea of denouncing pleasure and praising pain was born and I will give you a complete account of the system, and expound the actual teachings of the great explorer of the truth, the master-builder of human happiness. No one rejects, dislikes, or avoids pleasure itself, because it is pleasure, but because those who do not know how to pursue pleasure rationally encounter consequences that are extremely painful. Nor again is there anyone who loves or pursues or desires to obtain pain of itself, because it is pain, but because occasionally circumstances occur in which toil and pain can procure him some great pleasure. To take a trivial example, which of us ever undertakes laborious physical exercise, except to obtain some advantage from it? But who has any right to find fault with a man who chooses to enjoy a pleasure that has no annoying consequences, or one who avoids a pain that produces no resultant pleasure? On the other hand, we denounce with righteous indignation and dislike men who are so beguiled and demoralized by the charms of pleasure of the moment, so blinded by desire, that they cannot foresee the pain and trouble that are bound to ensue; and equal blame belongs to those who fail in their duty through weakness of will, which is the same as saying through shrinking from toil and pain. These cases are perfectly simple and easy to distinguish. In a free hour, when our power of choice is untrammelled and when nothing prevents our being able to do what we like best, every pleasure is to be welcomed and every pain avoided. But in certain circumstances and owing to the claims of duty or the obligations of business it will frequently occur that pleasures have to be repudiated and annoyances accepted. The wise man therefore always holds in these matters to this principle of selection: he rejects pleasures to secure other greater pleasures, or else he endures pains to avoid worse pains. But I must explain to you how all\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{main-service-url}}/users/{{user_2_id}}/events/{{event_id}}/comments",
+					"host": [
+						"{{main-service-url}}"
+					],
+					"path": [
+						"users",
+						"{{user_2_id}}",
+						"events",
+						"{{event_id}}",
+						"comments"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Post comment by user_2 (text == \"\") -> BAD_REQUEST",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 400\", function () {",
+							"    pm.response.to.have.status(400);",
+							"});",
+							"pm.test(\"Response have body\", function () {",
+							"    pm.response.to.be.withBody;",
+							"});",
+							"pm.test(\"Response is json\", function() {",
+							"    pm.response.to.be.json;",
+							"});",
+							"",
+							"const target = pm.response.json();",
+							"",
+							"pm.test(\"Response must contain: message, reason, email\", function () {",
+							"    pm.expect(target).to.have.property('message');",
+							"    pm.expect(target).to.have.property('reason');",
+							"    pm.expect(target).to.have.property('status');",
+							"    pm.expect(target).to.have.property('timestamp');",
+							"    pm.expect(target).to.have.property('errors');",
+							"});",
+							"",
+							"pm.test(\"Status must be 400 BAD_REQUEST\", function() {",
+							"    pm.expect(target.status).equal(\"400 BAD_REQUEST\", 'Wrong status');",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"text\": \"\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{main-service-url}}/users/{{user_2_id}}/events/{{event_id}}/comments",
+					"host": [
+						"{{main-service-url}}"
+					],
+					"path": [
+						"users",
+						"{{user_2_id}}",
+						"events",
+						"{{event_id}}",
+						"comments"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Post comment by user_2 (event 99999) -> NOT_FOUND",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 404\", function () {",
+							"    pm.response.to.have.status(404);",
+							"});",
+							"pm.test(\"Response have body\", function () {",
+							"    pm.response.to.be.withBody;",
+							"});",
+							"pm.test(\"Response is json\", function() {",
+							"    pm.response.to.be.json;",
+							"});",
+							"",
+							"const target = pm.response.json();",
+							"",
+							"pm.test(\"Response must contain: message, reason, email\", function () {",
+							"    pm.expect(target).to.have.property('message');",
+							"    pm.expect(target).to.have.property('reason');",
+							"    pm.expect(target).to.have.property('status');",
+							"    pm.expect(target).to.have.property('timestamp');",
+							"    pm.expect(target).to.have.property('errors');",
+							"});",
+							"",
+							"pm.test(\"Status must be 404 NOT_FOUND\", function() {",
+							"    pm.expect(target.status).equal(\"404 NOT_FOUND\", 'Wrong status');",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"text\": \"Comment text\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{main-service-url}}/users/{{user_2_id}}/events/99999/comments",
+					"host": [
+						"{{main-service-url}}"
+					],
+					"path": [
+						"users",
+						"{{user_2_id}}",
+						"events",
+						"99999",
+						"comments"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Post comment by user_99999 -> NOT_FOUND",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 404\", function () {",
+							"    pm.response.to.have.status(404);",
+							"});",
+							"pm.test(\"Response have body\", function () {",
+							"    pm.response.to.be.withBody;",
+							"});",
+							"pm.test(\"Response is json\", function() {",
+							"    pm.response.to.be.json;",
+							"});",
+							"",
+							"const target = pm.response.json();",
+							"",
+							"pm.test(\"Response must contain: message, reason, email\", function () {",
+							"    pm.expect(target).to.have.property('message');",
+							"    pm.expect(target).to.have.property('reason');",
+							"    pm.expect(target).to.have.property('status');",
+							"    pm.expect(target).to.have.property('timestamp');",
+							"    pm.expect(target).to.have.property('errors');",
+							"});",
+							"",
+							"pm.test(\"Status must be 404 NOT_FOUND\", function() {",
+							"    pm.expect(target.status).equal(\"404 NOT_FOUND\", 'Wrong status');",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"text\": \"Comment text\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{main-service-url}}/users/99999/events/{{event_id}}/comments",
+					"host": [
+						"{{main-service-url}}"
+					],
+					"path": [
+						"users",
+						"99999",
+						"events",
+						"{{event_id}}",
+						"comments"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Post comment_1 by user_2 -> CREATED",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 201\", function () {",
+							"    pm.response.to.have.status(201);",
+							"});",
+							"pm.test(\"Response have body\", function () {",
+							"    pm.response.to.be.withBody;",
+							"});",
+							"pm.test(\"Response is json\", function() {",
+							"    pm.response.to.be.json;",
+							"});",
+							"",
+							"const target = pm.response.json();",
+							"const source = JSON.parse(pm.request.body.raw);",
+							"",
+							"pm.test(\"Response must contain: message, reason, email\", function () {",
+							"    pm.expect(target).to.have.property('id');",
+							"    pm.expect(target).to.have.property('created');",
+							"    pm.expect(target).to.have.property('event');",
+							"    pm.expect(target).to.have.property('author');",
+							"    pm.expect(target).to.have.property('text');",
+							"});",
+							"",
+							"pm.test(\"Id must be not null\", function () {",
+							"    pm.expect(target.id).to.not.be.null;",
+							"});",
+							"",
+							"pm.test(\"Response fields must be equal to request\", function() {",
+							"    pm.expect(source.text).equal(target.text, 'Wrong text');",
+							"    pm.expect(target.event.id).equal(pm.variables.get(\"event_id\"), 'Wrong event id');",
+							"    pm.expect(target.author.id).equal(pm.variables.get(\"user_2_id\"), 'Wrong author id');",
+							"    pm.expect(target.event.initiator.id).equal(pm.variables.get(\"user_1_id\"), 'Wrong initiator id');",
+							"});",
+							"",
+							"pm.environment.set(\"comment_1_id\", target.id);"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"text\": \"Comment text\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{main-service-url}}/users/{{user_2_id}}/events/{{event_id}}/comments",
+					"host": [
+						"{{main-service-url}}"
+					],
+					"path": [
+						"users",
+						"{{user_2_id}}",
+						"events",
+						"{{event_id}}",
+						"comments"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Post comment_2 by user_2 -> CREATED",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 201\", function () {",
+							"    pm.response.to.have.status(201);",
+							"});",
+							"pm.test(\"Response have body\", function () {",
+							"    pm.response.to.be.withBody;",
+							"});",
+							"pm.test(\"Response is json\", function() {",
+							"    pm.response.to.be.json;",
+							"});",
+							"",
+							"const target = pm.response.json();",
+							"const source = JSON.parse(pm.request.body.raw);",
+							"",
+							"pm.test(\"Response must contain: message, reason, email\", function () {",
+							"    pm.expect(target).to.have.property('id');",
+							"    pm.expect(target).to.have.property('created');",
+							"    pm.expect(target).to.have.property('event');",
+							"    pm.expect(target).to.have.property('author');",
+							"    pm.expect(target).to.have.property('text');",
+							"});",
+							"",
+							"pm.test(\"Id must be not null\", function () {",
+							"    pm.expect(target.id).to.not.be.null;",
+							"});",
+							"",
+							"pm.test(\"Response fields must be equal to request\", function() {",
+							"    pm.expect(source.text).equal(target.text, 'Wrong text');",
+							"    pm.expect(target.event.id).equal(pm.variables.get(\"event_id\"), 'Wrong event id');",
+							"    pm.expect(target.author.id).equal(pm.variables.get(\"user_2_id\"), 'Wrong author id');",
+							"    pm.expect(target.event.initiator.id).equal(pm.variables.get(\"user_1_id\"), 'Wrong initiator id');",
+							"});",
+							"",
+							"pm.environment.set(\"comment_2_id\", target.id);"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"text\": \"Comment text\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{main-service-url}}/users/{{user_2_id}}/events/{{event_id}}/comments",
+					"host": [
+						"{{main-service-url}}"
+					],
+					"path": [
+						"users",
+						"{{user_2_id}}",
+						"events",
+						"{{event_id}}",
+						"comments"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get comment for event by public -> Empty list",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"pm.test(\"Response have body\", function () {",
+							"    pm.response.to.be.withBody;",
+							"});",
+							"pm.test(\"Response is json\", function() {",
+							"    pm.response.to.be.json;",
+							"});",
+							"pm.test(\"Data array is empty\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData).to.be.an('array').that.is.empty;",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"text\": \"Comment text\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{main-service-url}}/comments/{{event_id}}",
+					"host": [
+						"{{main-service-url}}"
+					],
+					"path": [
+						"comments",
+						"{{event_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update and publish comment_1 by admin -> OK",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"pm.test(\"Response have body\", function () {",
+							"    pm.response.to.be.withBody;",
+							"});",
+							"pm.test(\"Response is json\", function() {",
+							"    pm.response.to.be.json;",
+							"});",
+							"",
+							"const target = pm.response.json();",
+							"const source = JSON.parse(pm.request.body.raw);",
+							"",
+							"pm.test(\"Response must contain all fields\", function () {",
+							"    pm.expect(target).to.have.property('id');",
+							"    pm.expect(target).to.have.property('created');",
+							"    pm.expect(target).to.have.property('event');",
+							"    pm.expect(target).to.have.property('author');",
+							"    pm.expect(target).to.have.property('text');",
+							"});",
+							"",
+							"",
+							"pm.test(\"Response fields must be equal request\", function() {",
+							"    pm.expect(target.text).equal(source.text, 'Wrong text');",
+							"});",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"text\": \"Updated by admin comment_1 text\",\r\n    \"stateAction\": \"PUBLISH_COMMENT\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{main-service-url}}/admin/comments/{{comment_1_id}}",
+					"host": [
+						"{{main-service-url}}"
+					],
+					"path": [
+						"admin",
+						"comments",
+						"{{comment_1_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get comment for event by public -> comment_1",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"pm.test(\"Response have body\", function () {",
+							"    pm.response.to.be.withBody;",
+							"});",
+							"pm.test(\"Response is json\", function() {",
+							"    pm.response.to.be.json;",
+							"});",
+							"",
+							"const target = pm.response.json();",
+							"",
+							"pm.test(\"Response must contain: message, reason, email\", function () {",
+							"    pm.expect(target[0]).to.have.property('id');",
+							"    pm.expect(target[0]).to.have.property('created');",
+							"    pm.expect(target[0]).to.have.property('event');",
+							"    pm.expect(target[0]).to.have.property('author');",
+							"    pm.expect(target[0]).to.have.property('text');",
+							"});",
+							"",
+							"pm.test(\"Id must be not null\", function () {",
+							"    pm.expect(target.id).to.not.be.null;",
+							"});",
+							"",
+							"pm.test(\"Response fields must be equal to request\", function() {",
+							"    pm.expect(target[0].id).equal(pm.variables.get(\"comment_1_id\"), 'Wrong id');",
+							"    pm.expect(target[0].event.id).equal(pm.variables.get(\"event_id\"), 'Wrong event id');",
+							"    pm.expect(target[0].author.id).equal(pm.variables.get(\"user_2_id\"), 'Wrong author id');",
+							"    pm.expect(target[0].event.initiator.id).equal(pm.variables.get(\"user_1_id\"), 'Wrong initiator id');",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"text\": \"Comment text\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{main-service-url}}/comments/{{event_id}}",
+					"host": [
+						"{{main-service-url}}"
+					],
+					"path": [
+						"comments",
+						"{{event_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update comment_1 (published) by user_2 -> CONFLICT",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 409\", function () {",
+							"    pm.response.to.have.status(409);",
+							"});",
+							"pm.test(\"Response have body\", function () {",
+							"    pm.response.to.be.withBody;",
+							"});",
+							"pm.test(\"Response is json\", function() {",
+							"    pm.response.to.be.json;",
+							"});",
+							"",
+							"const target = pm.response.json();",
+							"",
+							"pm.test(\"Response must contain: message, reason, email\", function () {",
+							"    pm.expect(target).to.have.property('message');",
+							"    pm.expect(target).to.have.property('reason');",
+							"    pm.expect(target).to.have.property('status');",
+							"    pm.expect(target).to.have.property('timestamp');",
+							"    pm.expect(target).to.have.property('errors');",
+							"});",
+							"",
+							"pm.test(\"Status must be 409 CONFLICT\", function() {",
+							"    pm.expect(target.status).equal(\"409 CONFLICT\", 'Wrong status');",
+							"});",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"text\": \"Updated by user_2 comment_1 text\",\r\n    \"stateAction\": \"SEND_TO_REVIEW\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{main-service-url}}/users/{{user_2_id}}/events/{{event_id}}/comments/{{comment_1_id}}",
+					"host": [
+						"{{main-service-url}}"
+					],
+					"path": [
+						"users",
+						"{{user_2_id}}",
+						"events",
+						"{{event_id}}",
+						"comments",
+						"{{comment_1_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update comment_2 (pending) by user_2 -> OK",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"pm.test(\"Response have body\", function () {",
+							"    pm.response.to.be.withBody;",
+							"});",
+							"pm.test(\"Response is json\", function() {",
+							"    pm.response.to.be.json;",
+							"});",
+							"",
+							"const target = pm.response.json();",
+							"const source = JSON.parse(pm.request.body.raw);",
+							"",
+							"pm.test(\"Response must contain all fields\", function () {",
+							"    pm.expect(target).to.have.property('id');",
+							"    pm.expect(target).to.have.property('created');",
+							"    pm.expect(target).to.have.property('event');",
+							"    pm.expect(target).to.have.property('author');",
+							"    pm.expect(target).to.have.property('text');",
+							"});",
+							"",
+							"",
+							"pm.test(\"Response fields must be equal request\", function() {",
+							"    pm.expect(target.text).equal(source.text, 'Wrong text');",
+							"});",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"text\": \"Updated by user_2 comment_2 text\",\r\n    \"stateAction\": \"SEND_TO_REVIEW\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{main-service-url}}/users/{{user_2_id}}/events/{{event_id}}/comments/{{comment_2_id}}",
+					"host": [
+						"{{main-service-url}}"
+					],
+					"path": [
+						"users",
+						"{{user_2_id}}",
+						"events",
+						"{{event_id}}",
+						"comments",
+						"{{comment_2_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Cancel comment_2 (pending) by user_2 -> OK",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"pm.test(\"Response have body\", function () {",
+							"    pm.response.to.be.withBody;",
+							"});",
+							"pm.test(\"Response is json\", function() {",
+							"    pm.response.to.be.json;",
+							"});",
+							"",
+							"const target = pm.response.json();",
+							"",
+							"pm.test(\"Response must contain all fields\", function () {",
+							"    pm.expect(target).to.have.property('id');",
+							"    pm.expect(target).to.have.property('created');",
+							"    pm.expect(target).to.have.property('event');",
+							"    pm.expect(target).to.have.property('author');",
+							"    pm.expect(target).to.have.property('text');",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"stateAction\": \"CANCEL_REVIEW\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{main-service-url}}/users/{{user_2_id}}/events/{{event_id}}/comments/{{comment_2_id}}",
+					"host": [
+						"{{main-service-url}}"
+					],
+					"path": [
+						"users",
+						"{{user_2_id}}",
+						"events",
+						"{{event_id}}",
+						"comments",
+						"{{comment_2_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update and publish comment_1 (canceled) by admin -> CONFLICT",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 409\", function () {",
+							"    pm.response.to.have.status(409);",
+							"});",
+							"pm.test(\"Response have body\", function () {",
+							"    pm.response.to.be.withBody;",
+							"});",
+							"pm.test(\"Response is json\", function() {",
+							"    pm.response.to.be.json;",
+							"});",
+							"",
+							"const target = pm.response.json();",
+							"",
+							"pm.test(\"Response must contain: message, reason, email\", function () {",
+							"    pm.expect(target).to.have.property('message');",
+							"    pm.expect(target).to.have.property('reason');",
+							"    pm.expect(target).to.have.property('status');",
+							"    pm.expect(target).to.have.property('timestamp');",
+							"    pm.expect(target).to.have.property('errors');",
+							"});",
+							"",
+							"pm.test(\"Status must be 409 CONFLICT\", function() {",
+							"    pm.expect(target.status).equal(\"409 CONFLICT\", 'Wrong status');",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"text\": \"Updated by admin comment_1 text\",\r\n    \"stateAction\": \"PUBLISH_COMMENT\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{main-service-url}}/admin/comments/{{comment_1_id}}",
+					"host": [
+						"{{main-service-url}}"
+					],
+					"path": [
+						"admin",
+						"comments",
+						"{{comment_1_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete comment_1 by user_2 -> NO_CONTENT",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 204\", function () {",
+							"    pm.response.to.have.status(204);",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{main-service-url}}/users/{{user_2_id}}/events/{{event_id}}/comments/{{comment_1_id}}",
+					"host": [
+						"{{main-service-url}}"
+					],
+					"path": [
+						"users",
+						"{{user_2_id}}",
+						"events",
+						"{{event_id}}",
+						"comments",
+						"{{comment_1_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get comment for event (after deleting) by public -> Empty list",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"pm.test(\"Response have body\", function () {",
+							"    pm.response.to.be.withBody;",
+							"});",
+							"pm.test(\"Response is json\", function() {",
+							"    pm.response.to.be.json;",
+							"});",
+							"pm.test(\"Data array is empty\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData).to.be.an('array').that.is.empty;",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"text\": \"Comment text\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{main-service-url}}/comments/{{event_id}}",
+					"host": [
+						"{{main-service-url}}"
+					],
+					"path": [
+						"comments",
+						"{{event_id}}"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"variable": [
+		{
+			"key": "main-service-url",
+			"value": "http://localhost:8080"
+		}
+	]
+}

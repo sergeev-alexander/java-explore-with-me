@@ -3,7 +3,8 @@ package alexander.sergeev.validation.event_validation;
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
-public class UpdateEventTitleValidator implements ConstraintValidator<UpdateEventTitleValidation, String> {
+public class UpdateEventTitleValidator
+        implements ConstraintValidator<UpdateEventTitleValidation, String> {
 
     @Override
     public boolean isValid(String title, ConstraintValidatorContext context) {
