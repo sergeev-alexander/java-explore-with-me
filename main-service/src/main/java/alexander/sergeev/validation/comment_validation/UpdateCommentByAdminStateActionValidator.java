@@ -1,14 +1,13 @@
 package alexander.sergeev.validation.comment_validation;
 
 import alexander.sergeev.model.CommentAdminStateAction;
-import alexander.sergeev.validation.event_validation.UpdateEventByAdminStateActionValidation;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 import java.util.Arrays;
 
 public class UpdateCommentByAdminStateActionValidator
-        implements ConstraintValidator<UpdateEventByAdminStateActionValidation, String> {
+        implements ConstraintValidator<UpdateCommentByAdminStateActionValidation, String> {
 
     @Override
     public boolean isValid(String updateAdminStateActionString, ConstraintValidatorContext context) {

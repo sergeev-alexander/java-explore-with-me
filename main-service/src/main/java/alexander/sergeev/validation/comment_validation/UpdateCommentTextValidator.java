@@ -1,12 +1,10 @@
 package alexander.sergeev.validation.comment_validation;
 
-import alexander.sergeev.validation.event_validation.UpdateEventTitleValidation;
-
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
 public class UpdateCommentTextValidator
-        implements ConstraintValidator<UpdateEventTitleValidation, String> {
+        implements ConstraintValidator<UpdateCommentTextValidation, String> {
 
     @Override
     public boolean isValid(String title, ConstraintValidatorContext context) {

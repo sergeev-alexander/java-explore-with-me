@@ -25,7 +25,7 @@ public class PublicCommentController {
             @PathVariable(name = "eventId") @Positive Long eventId,
             @RequestParam(name = "from", defaultValue = "0") Integer firstElement,
             @RequestParam(name = "size", defaultValue = "10") Integer size) {
-        log.info("{} {} {}", request.getMethod(), request.getRequestURI(), request.getQueryString());
+        log.info("{} {}", request.getMethod(), request.getRequestURI());
         return commentService.getAllEventComments(eventId, PageRequest.of(firstElement / size, size));
     }
 
