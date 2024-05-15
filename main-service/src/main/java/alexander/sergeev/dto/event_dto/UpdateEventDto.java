@@ -4,7 +4,7 @@ import alexander.sergeev.model.Location;
 import alexander.sergeev.validation.ValidationMarker;
 import alexander.sergeev.validation.event_validation.*;
 import alexander.sergeev.validation.event_validation.UpdateEventByAdminStateActionValidation;
-import alexander.sergeev.validation.state_action_validation.UpdateByUserStateActionValidation;
+import alexander.sergeev.validation.user_state_action_validation.UpdateByUserStateActionValidation;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;

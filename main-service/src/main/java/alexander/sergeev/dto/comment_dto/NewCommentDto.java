@@ -20,8 +20,9 @@ public class NewCommentDto {
 
     @NotBlank(groups = ValidationMarker.OnCreate.class,
             message = "Creating comment text field is blank!")
-    @Size(min = 2, max = 2000,
-            message = "Creating comment text field is less than 2 or bigger than 2000 characters!")
+    @Size(min = 2, max = 2000, groups = ValidationMarker.OnCreate.class,
+            message = "Creating comment text field is less than 2 " +
+                    "or is bigger than 2000 characters!")
     String text;
 
 }

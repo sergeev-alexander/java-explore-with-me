@@ -35,25 +35,25 @@ public class PrivateCommentController {
 
     @PatchMapping("/{commentId}")
     @ResponseStatus(code = HttpStatus.OK)
-    public CommentDto patchAuthorsCommentById(
+    public CommentDto patchCommentByIdByAuthor(
             HttpServletRequest request,
             @PathVariable(name = "userId") @Positive Long userId,
             @PathVariable(name = "eventId") @Positive Long eventId,
             @PathVariable(name = "commentId") @Positive Long commentId,
             @RequestBody @Validated(ValidationMarker.OnUpdate.class) UpdateCommentDto updateCommentDto) {
         log.info("{} {} {}", request.getMethod(), request.getRequestURI(), updateCommentDto);
-        return commentService.patchAuthorsCommentById(userId, eventId, commentId, updateCommentDto);
+        return commentService.patchCommentByIdByAuthor(userId, eventId, commentId, updateCommentDto);
     }
 
     @DeleteMapping("/{commentId}")
     @ResponseStatus(code = HttpStatus.NO_CONTENT)
-    public void deleteAuthorsCommentById(
+    public void deleteCommentByIdByAuthor(
             HttpServletRequest request,
             @PathVariable(name = "userId") @Positive Long userId,
             @PathVariable(name = "eventId") @Positive Long eventId,
             @PathVariable(name = "commentId") @Positive Long commentId) {
         log.info("{} {}", request.getMethod(), request.getRequestURI());
-        commentService.deleteAuthorsCommentById(userId, eventId, commentId);
+        commentService.deleteCommentByIdByAuthor(userId, eventId, commentId);
     }
 
 }

@@ -38,7 +38,7 @@ public class CommentService {
                 .collect(Collectors.toList());
     }
 
-    public CommentDto getCommentById(Long commentId) {
+    public CommentDto getCommentByIdByAdmin(Long commentId) {
         return CommentMapper.mapCommentToDto(commentRepository.getCommentById(commentId));
     }
 
@@ -71,10 +71,10 @@ public class CommentService {
         return CommentMapper.mapCommentToDto(commentRepository.save(comment));
     }
 
-    public CommentDto patchAuthorsCommentById(Long userId,
-                                              Long eventId,
-                                              Long commentId,
-                                              UpdateCommentDto updateCommentDto) {
+    public CommentDto patchCommentByIdByAuthor(Long userId,
+                                               Long eventId,
+                                               Long commentId,
+                                               UpdateCommentDto updateCommentDto) {
         userRepository.checkUserById(userId);
         eventRepository.checkEventById(eventId);
         Comment comment = commentRepository.getCommentById(commentId);
@@ -87,7 +87,7 @@ public class CommentService {
         return CommentMapper.mapCommentToDto(commentRepository.save(comment));
     }
 
-    public void deleteAuthorsCommentById(Long userId, Long eventId, Long commentId) {
+    public void deleteCommentByIdByAuthor(Long userId, Long eventId, Long commentId) {
         userRepository.checkUserById(userId);
         eventRepository.checkEventById(eventId);
         Comment comment = commentRepository.getCommentById(commentId);

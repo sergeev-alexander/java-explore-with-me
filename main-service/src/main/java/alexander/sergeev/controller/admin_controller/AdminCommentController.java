@@ -22,11 +22,11 @@ public class AdminCommentController {
     private final CommentService commentService;
 
     @GetMapping("/{commentId}")
-    public CommentDto getCommentById(
+    public CommentDto getCommentByIdByAdmin(
             HttpServletRequest request,
             @PathVariable(name = "commentId") @Positive Long commentId) {
         log.info("{} {}", request.getMethod(), request.getRequestURI());
-        return commentService.getCommentById(commentId);
+        return commentService.getCommentByIdByAdmin(commentId);
     }
 
     @PatchMapping("/{commentId}")

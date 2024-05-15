@@ -1,4 +1,4 @@
-package alexander.sergeev.validation.state_action_validation;
+package alexander.sergeev.validation.user_state_action_validation;
 
 import javax.validation.Constraint;
 import javax.validation.Payload;

@@ -1,4 +1,4 @@
-package alexander.sergeev.validation.state_action_validation;
+package alexander.sergeev.validation.user_state_action_validation;
 
 import alexander.sergeev.model.UserStateAction;
 
@@ -11,7 +11,7 @@ public class UpdateByUserStateActionValidator
 
     @Override
     public boolean isValid(String userStateActionString, ConstraintValidatorContext context) {
-        if (!(userStateActionString == null) && Arrays.stream(UserStateAction.values())
+        if (userStateActionString != null && Arrays.stream(UserStateAction.values())
                 .noneMatch((value) -> String.valueOf(value).equals(userStateActionString))) {
             context.disableDefaultConstraintViolation();
             context.buildConstraintViolationWithTemplate("Updating user stateAction field " +
