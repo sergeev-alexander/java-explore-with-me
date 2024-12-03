@@ -3,8 +3,10 @@ package alexander.sergeev.dto.event_dto;
 import alexander.sergeev.dto.category_dto.CategoryDto;
 import alexander.sergeev.dto.user_dto.UserShortDto;
 import com.fasterxml.jackson.annotation.JsonFormat;
-import lombok.*;
-import lombok.experimental.FieldDefaults;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
@@ -14,25 +16,25 @@ import static alexander.sergeev.formatter.FormatterDateTime.DATE_TIME_PATTERN;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@FieldDefaults(level = AccessLevel.PRIVATE)
 public class EventShortDto {
 
-    Long id;
+    private Long id;
 
-    String annotation;
+    private String annotation;
 
-    CategoryDto category;
+    private CategoryDto category;
 
-    Long confirmedRequests;
+    private Long confirmedRequests;
 
     @JsonFormat(pattern = DATE_TIME_PATTERN)
-    LocalDateTime eventDate;
+    private LocalDateTime eventDate;
 
-    UserShortDto initiator;
-    Boolean paid;
+    private UserShortDto initiator;
 
-    String title;
+    private Boolean paid;
 
-    Long views;
+    private String title;
+
+    private Long views;
 
 }

@@ -17,7 +17,7 @@
         <module>stats-service</module>
     </modules>
 
-    <groupId>ru.practicum</groupId>
+    <groupId>alexander.sergeev</groupId>
     <artifactId>explore-with-me</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <packaging>pom</packaging>

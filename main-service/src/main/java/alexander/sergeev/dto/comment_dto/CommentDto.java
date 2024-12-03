@@ -1,6 +1,7 @@
-package alexander.sergeev.dto.request;
+package alexander.sergeev.dto.comment_dto;
 
-import alexander.sergeev.model.RequestStatus;
+import alexander.sergeev.dto.event_dto.EventShortDto;
+import alexander.sergeev.dto.user_dto.UserShortDto;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -13,17 +14,17 @@ import static alexander.sergeev.formatter.FormatterDateTime.DATE_TIME_PATTERN;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class RequestDto {
+public class CommentDto {
 
-    Long id;
+    private Long id;
 
     @JsonFormat(pattern = DATE_TIME_PATTERN)
     private LocalDateTime created;
 
-    private Long event;
+    private EventShortDto event;
 
-    private Long requester;
+    private UserShortDto author;
 
-    private RequestStatus status;
+    private String text;
 
 }
