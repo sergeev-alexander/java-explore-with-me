@@ -325,5 +325,4 @@ public class EventService {
                 .peek(event -> event.setViews(hitMap.getOrDefault(event.getId(), 0L)))
                 .collect(Collectors.toList());
     }
-
 }
